@@ -7,10 +7,11 @@ import { AppService } from './app.service'
 import { AppController } from './app.controller'
 
 /* 业务模块 */
-import { UserModule } from './user/user.module'
+import { UserModule } from './modules/user/user.module'
 
 /* 辅助工具 */
 import { getEnvFilePath } from './utils/env'
+import { AuthModule } from './modules/auth/auth.module'
 import configuration from './config/configuration'
 
 @Module({
@@ -25,19 +26,25 @@ import configuration from './config/configuration'
     TypeOrmModule.forRootAsync({
       useFactory: (config: ConfigService) => {
         return {
-          host: config.get<string>('database.host'),
           type: config.get<string>('database.type') as any,
+          host: config.get<string>('database.host'),
+          port: config.get<number>('database.port'),
           username: config.get<string>('database.user'),
           password: config.get<string>('database.password'),
-          port: config.get<number>('database.port'),
           database: config.get<string>('database.name'),
-          synchronize: true,
-          autoLoadEntities: true,
+          synchronize: true, // 是否自动同步实体文件,生产环境建议关闭
+          autoLoadEntities: true, // 自动加载实体
+          poolSize: 10,
+          connectorPackage: 'mysql2',
+          extra: {
+            authPlugin: 'sha256_password',
+          },
         }
       },
       inject: [ConfigService],
     }),
     UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
