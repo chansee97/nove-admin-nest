@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { ConfigModule, ConfigService } from '@nestjs/config'
+
 import { AppService } from './app.service'
 
 /* 控制层 */
@@ -47,6 +48,9 @@ import configuration from './config/configuration'
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+
+  ],
 })
 export class AppModule {}
