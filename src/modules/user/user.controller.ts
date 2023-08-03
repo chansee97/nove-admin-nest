@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common'
 import { ValidationPipe } from '@nestjs/common/pipes'
 import { Public } from 'src/public/public.decorator'
+import { SearchQuery } from 'src/common/common.dto'
 import { UserService } from './user.service'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
@@ -16,8 +17,8 @@ export class UserController {
   }
 
   @Get()
-  findAll() {
-    return this.userService.findAll()
+  findAll(@Query() searchQuery: SearchQuery) {
+    return this.userService.findAll(searchQuery)
   }
 
   @Get(':id')

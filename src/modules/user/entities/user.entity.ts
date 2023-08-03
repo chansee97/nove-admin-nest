@@ -1,4 +1,4 @@
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { BeforeInsert, Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
 import { encryptData } from 'src/utils/crypto'
 
 @Entity('user')
@@ -18,21 +18,26 @@ export class User {
   @Column({ nullable: true })
   nickname: string // 昵称
 
+  @Column({ nullable: true })
   avatar: string // 头像
+
   @Column({ nullable: true })
   email: string // 邮箱
 
   @Column({ nullable: true })
   role: string // 角色
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  create_time: Date
+  @CreateDateColumn()
+  createTime: Date
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  update_time: Date
+  @UpdateDateColumn()
+  updateTime: Date
+
+  @DeleteDateColumn({ nullable: true })
+  deletedAt: Date
 
   @BeforeInsert()
-  beforeInsert() {
+  beforeSave() {
     this.password = encryptData(this.password)
   }
 }

@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
 import { ApiErrorCode, ApiException } from 'src/filter/api-exception'
+import { encryptData } from 'src/utils/crypto'
+import type { SearchQuery } from 'src/common/common.dto'
 import type { CreateUserDto } from './dto/create-user.dto'
 import type { UpdateUserDto } from './dto/update-user.dto'
 import { User } from './entities/user.entity'
@@ -12,7 +14,8 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
-  ) { }
+  ) {
+  }
 
   async create(createUserDto: CreateUserDto) {
     const { username } = createUserDto
@@ -33,29 +36,62 @@ export class UserService {
     }
   }
 
-  async findAll() {
-    return await this.userRepository.find()
+  async findAll(searchQuery: SearchQuery) {
+    const [list, total] = await this.userRepository.findAndCount({
+      skip: (searchQuery.pageNum - 1) * searchQuery.pageSize,
+      take: searchQuery.pageSize,
+      where: {
+        deletedAt: null,
+      },
+    })
+
+    return {
+      list,
+      total,
+    }
   }
 
-  findOne(id: number) {
-    return `This action get a #${id} user`
+  async findOne(id: number) {
+    const user = await this.userRepository.findOne({
+      where: {
+        id,
+      },
+    })
+
+    if (!user)
+      throw new ApiException('未找到该用户信息', ApiErrorCode.USER_NOTEXIST)
+
+    return user
   }
 
   async findOneByUserName(username: string) {
-    const res = await this.userRepository.findOne({
+    const user = await this.userRepository.findOne({
       where: { username },
     })
-    if (!res)
+    if (!user)
       throw new ApiException('未找到该用户信息', ApiErrorCode.USER_NOTEXIST)
 
-    return res
+    return user
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const user = await this.findOne(id)
+
+    updateUserDto.password = encryptData(updateUserDto.password)
+
+    await this.userRepository.save({ ...user, ...updateUserDto })
+    return '更新成功'
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`
+  async remove(id: number) {
+    await this.findOne(id)
+
+    await this.userRepository
+      .createQueryBuilder('user')
+      .softDelete()
+      .where('id= :id', { id })
+      .execute()
+
+    return '删除成功'
   }
 }

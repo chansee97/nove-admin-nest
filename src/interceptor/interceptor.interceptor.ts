@@ -22,6 +22,6 @@ implements NestInterceptor<T, Response<T>> {
   ): Observable<Response<T>> {
     return next
       .handle()
-      .pipe(map(data => ({ code: 200, data, message: '请求成功' })))
+      .pipe(map(data => ({ code: 200, data, message: '操作成功' })))
   }
 }
