@@ -12,8 +12,9 @@ export class AuthService {
 
   login(user: any) {
     const payload = { username: user.username, sub: user.id }
-    const access_token = this.jwtService.sign(payload)
-    return { access_token }
+    const accessToken = this.jwtService.sign(payload)
+    const refreshToken = this.jwtService.sign(payload, { expiresIn: '8d' })
+    return { accessToken, refreshToken }
   }
 
   async validateUser(username: string, password: string): Promise<any> {
@@ -21,6 +22,16 @@ export class AuthService {
     if (user && user.password === encryptData(password)) {
       const { password, ...result } = user
       return result
+    }
+    return null
+  }
+
+  async refreshToken(refreshToken: string) {
+    const res: any = await this.jwtService.verify(refreshToken)
+
+    if (res) {
+      const user = await this.userService.findOneByUserName(res.username)
+      return this.login(user)
     }
     return null
   }

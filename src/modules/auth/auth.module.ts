@@ -7,7 +7,6 @@ import { PassportModule } from '@nestjs/passport'
 import { AuthController } from './auth.controller'
 import { AuthService } from './auth.service'
 import { LocalStrategy } from './local.strategy'
-import { JwtStrategy } from './jwt.strategy'
 import { JwtAuthGuard } from './auth.guard'
 
 @Module({
@@ -15,7 +14,6 @@ import { JwtAuthGuard } from './auth.guard'
   providers: [
     AuthService,
     LocalStrategy,
-    JwtStrategy,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
@@ -23,14 +21,14 @@ import { JwtAuthGuard } from './auth.guard'
   ],
   imports: [
     UserModule,
-    PassportModule.register({ defaultStrategy: 'jwt' }),
+    PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         return {
           secret: configService.get('JWT_SECRET'),
-          // global: true,
+          global: true,
           signOptions: {
             expiresIn: '2m',
           },

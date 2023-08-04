@@ -1,9 +1,9 @@
 import { NestFactory } from '@nestjs/core'
 import { ConfigService } from '@nestjs/config'
-import { AppModule } from './app.module'
 
-import { HttpExceptionFilter } from './filter/http-exception.filter'
-import { TransformInterceptor } from './interceptor/interceptor.interceptor'
+import { HttpExceptionFilter } from 'src/common/filters'
+import { TransformInterceptor } from 'src/common/interceptor'
+import { AppModule } from './app.module'
 
 async function bootstrap() {
   // 创建服务实例

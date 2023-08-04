@@ -6,3 +6,7 @@ export function getEnvFilePath() {
     : envFilePath.unshift('.env.prod')
   return envFilePath
 }
+
+export function getEnvVar(targetName: string) {
+  return process.env[targetName]
+}
