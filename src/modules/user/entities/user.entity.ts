@@ -1,5 +1,9 @@
-import { BeforeInsert, Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import {
+  BeforeInsert, Column, CreateDateColumn, DeleteDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm'
 import { encryptData } from 'src/utils/crypto'
+import { Role } from '../../role/entities/role.entity'
 
 @Entity('user')
 export class User {
@@ -24,8 +28,11 @@ export class User {
   @Column({ nullable: true })
   email: string // 邮箱
 
-  @Column({ nullable: true })
-  role: string // 角色
+  @ManyToMany(() => Role)
+  @JoinTable({
+    name: 'user_role_relation',
+  })
+  roles: Role[] // 角色
 
   @CreateDateColumn()
   createTime: Date

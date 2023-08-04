@@ -30,7 +30,7 @@ import { JwtAuthGuard } from './auth.guard'
           secret: configService.get('JWT_SECRET'),
           global: true,
           signOptions: {
-            expiresIn: '2m',
+            expiresIn: '1h',
           },
         }
       },

@@ -16,7 +16,7 @@ export class UserController {
     return this.userService.create(createUserDto)
   }
 
-  @Get()
+  @Get('page')
   findAll(@Query() searchQuery: SearchQuery) {
     return this.userService.findAll(searchQuery)
   }

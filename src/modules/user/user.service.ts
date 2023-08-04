@@ -1,7 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
-
 import { ApiException } from 'src/common/filters'
 import { ApiErrorCode } from 'src/common/enum'
 import { encryptData } from 'src/utils/crypto'

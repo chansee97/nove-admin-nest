@@ -8,6 +8,8 @@ import { UserModule } from './modules/user/user.module'
 /* 辅助工具 */
 import { getEnvFilePath } from './utils/env'
 import { AuthModule } from './modules/auth/auth.module'
+import { RoleModule } from './modules/role/role.module'
+import { PermissionModule } from './modules/permission/permission.module'
 import configuration from './config/configuration'
 
 @Module({
@@ -41,6 +43,8 @@ import configuration from './config/configuration'
     }),
     UserModule,
     AuthModule,
+    RoleModule,
+    PermissionModule,
   ],
 })
 export class AppModule {}
