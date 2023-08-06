@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { ConfigModule, ConfigService } from '@nestjs/config'
+import { AppController } from './app.controller'
 
 /* 业务模块 */
 import { UserModule } from './modules/user/user.module'
@@ -46,5 +47,6 @@ import configuration from './config/configuration'
     RoleModule,
     PermissionModule,
   ],
+  controllers: [AppController],
 })
 export class AppModule {}

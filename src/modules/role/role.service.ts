@@ -1,26 +1,68 @@
 import { Injectable } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
+import { In, Repository } from 'typeorm'
+import { ApiException } from 'src/common/filters'
+import { ApiErrorCode } from 'src/common/enum'
+import type { SearchQuery } from 'src/common/dto/page.dto'
+import { Permission } from '../permission/entities/permission.entity'
 import type { CreateRoleDto } from './dto/create-role.dto'
 import type { UpdateRoleDto } from './dto/update-role.dto'
+import { Role } from './entities/role.entity'
 
 @Injectable()
 export class RoleService {
-  create(createRoleDto: CreateRoleDto) {
-    return 'This action adds a new role'
+  constructor(
+    @InjectRepository(Role)
+    private roleRepository: Repository<Role>,
+    @InjectRepository(Permission)
+    private permissionRepository: Repository<Permission>,
+  ) {}
+
+  async create(createRoleDto: CreateRoleDto) {
+    const permissions = await this.permissionRepository.find({
+      where: {
+        id: In(createRoleDto.permissionIds),
+      },
+    })
+    const name = createRoleDto.name
+    const existRole = await this.roleRepository.findOne({
+      where: { name },
+    })
+
+    if (existRole)
+      throw new ApiException('角色已存在', ApiErrorCode.SERVER_ERROR)
+    this.roleRepository.save({ permissions, name })
+
+    return '角色新增成功'
   }
 
-  findAll() {
-    return `This action returns all role`
+  async findAll(searchQuery: SearchQuery) {
+    const [list, total] = await this.roleRepository.findAndCount({
+      skip: (searchQuery.pageNum - 1) * searchQuery.pageSize,
+      take: searchQuery.pageSize,
+    })
+    return {
+      list,
+      total,
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} role`
+  async findOne(id: string) {
+    const existData = await this.roleRepository.findOne({
+      where: { id },
+    })
+
+    if (!existData)
+      throw new ApiException('操作对象不存在', ApiErrorCode.SERVER_ERROR)
+
+    return existData
   }
 
-  update(id: number, updateRoleDto: UpdateRoleDto) {
+  update(id: string, updateRoleDto: UpdateRoleDto) {
     return `This action updates a #${id} role`
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} role`
   }
 }

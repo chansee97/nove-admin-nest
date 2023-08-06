@@ -39,15 +39,30 @@ export class PermissionService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} permission`
+  async findOne(id: string) {
+    const existPermission = await this.permissionRepository.findOne({
+      where: { id },
+    })
+
+    if (!existPermission)
+      throw new ApiException('操作对象不存在', ApiErrorCode.SERVER_ERROR)
+
+    return existPermission
   }
 
-  update(id: number, updatePermissionDto: UpdatePermissionDto) {
-    return `This action updates a #${id} permission`
+  async update(updatePermissionDto: UpdatePermissionDto) {
+    const { id } = updatePermissionDto
+    await this.findOne(id)
+
+    await this.permissionRepository.update(id, updatePermissionDto)
+
+    return '更新成功'
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} permission`
+  async remove(id: string) {
+    await this.findOne(id)
+
+    await this.permissionRepository.delete(id)
+    return '删除成功'
   }
 }
