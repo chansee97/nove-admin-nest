@@ -1,4 +1,5 @@
 <div align="center">
+<img src="./nova.icon.svg" width="160"/>
 
 ## Nova-admin-nestjs
 </div>
@@ -8,6 +9,11 @@
 nova-admin Nestjs后端
 </div>
 
+
+## Feature
+
+- jwt authentication
+- RBAC Authority Control (user -> role -> premissions)
 
 ## Usage
 
