@@ -63,9 +63,8 @@ export class UserService {
 
   async findOne(id: number) {
     const user = await this.userRepository.findOne({
-      where: {
-        id,
-      },
+      where: { id },
+      relations: ['roles'],
     })
 
     if (!user)
@@ -84,12 +83,20 @@ export class UserService {
     return user
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  async update(updateUserDto: UpdateUserDto) {
+    const { id, roleIds } = updateUserDto
     const user = await this.findOne(id)
 
-    updateUserDto.password = encryptData(updateUserDto.password)
+    const roles = await this.roleRepository.find({
+      where: {
+        id: In(roleIds),
+      },
+    })
 
-    await this.userRepository.save({ ...user, ...updateUserDto })
+    if (updateUserDto.password)
+      updateUserDto.password = encryptData(updateUserDto.password)
+
+    await this.userRepository.save({ ...user, ...updateUserDto, roles })
     return '更新成功'
   }
 

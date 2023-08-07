@@ -31,6 +31,7 @@ export class RoleService {
 
     if (existRole)
       throw new ApiException('角色已存在', ApiErrorCode.SERVER_ERROR)
+
     this.roleRepository.save({ permissions, name })
 
     return '角色新增成功'
@@ -50,6 +51,7 @@ export class RoleService {
   async findOne(id: string) {
     const existData = await this.roleRepository.findOne({
       where: { id },
+      relations: ['permissions'],
     })
 
     if (!existData)
@@ -58,11 +60,29 @@ export class RoleService {
     return existData
   }
 
-  update(id: string, updateRoleDto: UpdateRoleDto) {
-    return `This action updates a #${id} role`
+  async update(updateRoleDto: UpdateRoleDto) {
+    const { id } = updateRoleDto
+
+    const permissions = await this.permissionRepository.find({
+      where: {
+        id: In(updateRoleDto.permissionIds),
+      },
+    })
+
+    const role = await this.findOne(id)
+
+    // this.roleRepository.merge(role, updateRoleDto)
+    // 更新角色的字段
+    role.permissions = permissions
+    role.name = updateRoleDto.name // 根据实际字段进行赋值
+
+    this.roleRepository.save(role)
+    return '角色修改成功'
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} role`
+  async remove(id: string) {
+    await this.findOne(id)
+    await this.roleRepository.delete(id)
+    return '删除成功'
   }
 }

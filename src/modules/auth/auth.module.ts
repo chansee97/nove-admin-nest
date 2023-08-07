@@ -3,7 +3,6 @@ import { APP_GUARD } from '@nestjs/core'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { UserModule } from 'src/modules/user/user.module'
 import { JwtModule } from '@nestjs/jwt'
-import { PassportModule } from '@nestjs/passport'
 import { AuthController } from './auth.controller'
 import { AuthService } from './auth.service'
 import { JwtAuthGuard } from './auth.guard'
@@ -19,7 +18,6 @@ import { JwtAuthGuard } from './auth.guard'
   ],
   imports: [
     UserModule,
-    PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
