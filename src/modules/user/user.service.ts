@@ -47,9 +47,17 @@ export class UserService {
   }
 
   async findAll(searchQuery: SearchQuery) {
+    let skip = 0
+    let take = 0
+
+    if (searchQuery.pageNum && searchQuery.pageSize) {
+      skip = (searchQuery.pageNum - 1) * searchQuery.pageSize
+      take = searchQuery.pageSize
+    }
+
     const [list, total] = await this.userRepository.findAndCount({
-      skip: (searchQuery.pageNum - 1) * searchQuery.pageSize,
-      take: searchQuery.pageSize,
+      skip,
+      take,
       where: {
         deletedAt: null,
       },

@@ -1,7 +1,7 @@
 export enum ApiErrorCode {
   /* 通用 */
   SERVER_SUCCESS = 200, // 成功
-  SERVER_ERROR = 200, // 成功
+  SERVER_ERROR = 500, // 成功
 
   /* 业务相关 */
   USER_ID_INVALID = 1001, // 用户id无效

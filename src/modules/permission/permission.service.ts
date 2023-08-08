@@ -29,9 +29,17 @@ export class PermissionService {
   }
 
   async findAll(searchQuery: SearchQuery) {
+    let skip = 0
+    let take = 0
+
+    if (searchQuery.pageNum && searchQuery.pageSize) {
+      skip = (searchQuery.pageNum - 1) * searchQuery.pageSize
+      take = searchQuery.pageSize
+    }
+
     const [list, total] = await this.permissionRepository.findAndCount({
-      skip: (searchQuery.pageNum - 1) * searchQuery.pageSize,
-      take: searchQuery.pageSize,
+      skip,
+      take,
     })
     return {
       list,

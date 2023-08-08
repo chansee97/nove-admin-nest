@@ -34,10 +34,9 @@ export class JwtAuthGuard implements CanActivate {
     if (!token) throw new ApiException('未登录', ApiErrorCode.TOKEN_MISS)
 
     try {
-      const payload = await this.jwtService.verifyAsync(token, {
+      await this.jwtService.verifyAsync(token, {
         secret: this.configService.get('JWT_SECRET'),
       })
-      request.user = payload
     }
     catch {
       throw new ApiException('token验证失败', ApiErrorCode.TOKEN_INVALID)

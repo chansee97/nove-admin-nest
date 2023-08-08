@@ -8,6 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm'
 import { Permission } from 'src/modules/permission/entities/permission.entity'
+import { Menu } from 'src/modules/menu/entities/menu.entity'
 
 @Entity()
 export class Role {
@@ -30,4 +31,10 @@ export class Role {
     name: 'role_permission_relation',
   })
   permissions: Permission[]
+
+  @ManyToMany(() => Menu)
+  @JoinTable({
+    name: 'role_menu_relation',
+  })
+  menus: Menu[]
 }
