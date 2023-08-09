@@ -4,6 +4,7 @@ import { In, Repository } from 'typeorm'
 import { ApiException } from 'src/common/filters'
 import { ApiErrorCode } from 'src/common/enum'
 import type { SearchQuery } from 'src/common/dto/page.dto'
+import { Menu } from '../menu/entities/menu.entity'
 import { Permission } from '../permission/entities/permission.entity'
 import type { CreateRoleDto } from './dto/create-role.dto'
 import type { UpdateRoleDto } from './dto/update-role.dto'
@@ -16,23 +17,33 @@ export class RoleService {
     private roleRepository: Repository<Role>,
     @InjectRepository(Permission)
     private permissionRepository: Repository<Permission>,
+     @InjectRepository(Menu)
+    private menuRepository: Repository<Menu>,
   ) {}
 
   async create(createRoleDto: CreateRoleDto) {
-    const permissions = await this.permissionRepository.find({
-      where: {
-        id: In(createRoleDto.permissionIds),
-      },
-    })
-    const name = createRoleDto.name
     const existRole = await this.roleRepository.findOne({
-      where: { name },
+      where: { name: createRoleDto.name },
     })
 
     if (existRole)
       throw new ApiException('角色已存在', ApiErrorCode.SERVER_ERROR)
 
-    this.roleRepository.save({ permissions, name })
+    // 查询传入数组permissionIds的全部permission实体
+    const permissions = await this.permissionRepository.find({
+      where: {
+        id: In(createRoleDto.permissionIds),
+      },
+    })
+
+    // 查询传入数组menuIds的全部menu实体
+    const menus = await this.menuRepository.find({
+      where: {
+        id: In(createRoleDto.menuIds),
+      },
+    })
+
+    this.roleRepository.save({ ...createRoleDto, permissions, menus })
 
     return '角色新增成功'
   }
@@ -59,7 +70,7 @@ export class RoleService {
   async findOne(id: string) {
     const existData = await this.roleRepository.findOne({
       where: { id },
-      relations: ['permissions'],
+      relations: ['permissions', 'menus'],
     })
 
     if (!existData)
@@ -71,17 +82,23 @@ export class RoleService {
   async update(updateRoleDto: UpdateRoleDto) {
     const { id } = updateRoleDto
 
+    const role = await this.findOne(id)
+
     const permissions = await this.permissionRepository.find({
       where: {
         id: In(updateRoleDto.permissionIds),
       },
     })
 
-    const role = await this.findOne(id)
+    const menus = await this.menuRepository.find({
+      where: {
+        id: In(updateRoleDto.menuIds),
+      },
+    })
 
-    // this.roleRepository.merge(role, updateRoleDto)
     // 更新角色的字段
     role.permissions = permissions
+    role.menus = menus
     role.name = updateRoleDto.name // 根据实际字段进行赋值
 
     this.roleRepository.save(role)
@@ -89,8 +106,15 @@ export class RoleService {
   }
 
   async remove(id: string) {
-    await this.findOne(id)
-    await this.roleRepository.delete(id)
+    const role = await this.findOne(id)
+
+    // 删除关联的权限
+    await this.permissionRepository.remove(role.permissions)
+
+    // 删除关联的菜单
+    await this.menuRepository.remove(role.menus)
+
+    await this.roleRepository.remove(role)
     return '删除成功'
   }
 }

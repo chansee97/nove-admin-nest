@@ -109,13 +109,12 @@ export class UserService {
   }
 
   async remove(id: number) {
-    await this.findOne(id)
+    const user = await this.findOne(id)
 
-    await this.userRepository
-      .createQueryBuilder('user')
-      .softDelete()
-      .where('id= :id', { id })
-      .execute()
+    // 删除关联的角色
+    await this.roleRepository.remove(user.roles)
+
+    await this.userRepository.remove(user)
 
     return '删除成功'
   }
