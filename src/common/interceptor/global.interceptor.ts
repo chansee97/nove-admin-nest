@@ -21,6 +21,6 @@ export class TransformInterceptor<T>implements NestInterceptor<T, Response<T>> {
   ): Observable<Response<T>> {
     return next
       .handle()
-      .pipe(map(data => ({ code: 200, data, message: '操作成功' })))
+      .pipe(map(data => ({ code: 200, data: data || true, message: '操作成功' })))
   }
 }

@@ -7,7 +7,6 @@ import {
   HttpException,
 } from '@nestjs/common'
 import type { Request, Response } from 'express'
-import { ApiException } from './api-exception.filter'
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -23,17 +22,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
     reason==>${exception.message}`,
     )
 
-    /* 返回业务错误 */
-    if (exception instanceof ApiException) {
-      response.status(status).json({
-        code: exception.getErrorCode(),
-        data: null,
-        message: exception.getErrorMessage(),
-      })
-      return
-    }
-
-    /* 返回其他错误 */
     response.status(status).json({
       code: status,
       data: null,

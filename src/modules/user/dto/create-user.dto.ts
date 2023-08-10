@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, Length, Matches } from 'class-validator'
+import { IsEmail, IsNotEmpty, IsNumber, IsString, Length, Matches } from 'class-validator'
 
 /**
  * 注册的时候，用户名密码不能为空，长度为 6-30，并且限定了不能是特殊字符。
@@ -6,7 +6,9 @@ import { IsNotEmpty, IsString, Length, Matches } from 'class-validator'
 export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
-  @Length(5, 30)
+  @Length(5, 30, {
+    message: '用户名长度5-30',
+  })
   @Matches(/^[a-zA-Z0-9#$%_-]+$/, {
     message: '用户名只能是字母、数字或者 #、$、%、_、- 这些字符',
   })
@@ -16,4 +18,14 @@ export class CreateUserDto {
   @IsNotEmpty()
   @Length(6, 30)
   password: string
+
+  nickname: string
+
+  avatar: string
+
+  @IsEmail()
+  email: string
+
+  @IsNumber()
+  tel: string
 }

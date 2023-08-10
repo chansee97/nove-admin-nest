@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core'
 import { ConfigService } from '@nestjs/config'
 
-import { HttpExceptionFilter } from 'src/common/filters'
+import { ApiExceptionsFilter, HttpExceptionFilter } from 'src/common/filters'
 import { TransformInterceptor } from 'src/common/interceptor'
 import { AppModule } from './app.module'
 
@@ -12,7 +12,9 @@ async function bootstrap() {
   // 全局拦截器
   app.useGlobalInterceptors(new TransformInterceptor())
 
-  // 全局过滤器
+  // 业务错误过滤器
+  app.useGlobalFilters(new ApiExceptionsFilter())
+  // HTTP错误过滤器
   app.useGlobalFilters(new HttpExceptionFilter())
 
   // 服务启动

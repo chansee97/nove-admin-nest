@@ -135,9 +135,9 @@ export class UserService {
     console.warn('🚀 ~ file: user.service.ts:109 ~ UserService ~ test ~ params:', params)
   }
 
-  async findPermissionNames(token: string, userInfo) {
+  async findPermissionNames(username) {
     const user = await this.userRepository.findOne({
-      where: { username: userInfo.username },
+      where: { username },
       relations: ['roles', 'roles.permissions'],
     })
     if (user) {

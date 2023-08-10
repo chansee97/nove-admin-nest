@@ -5,22 +5,21 @@ import type {
 import {
   Injectable,
 } from '@nestjs/common'
-import { JwtService } from '@nestjs/jwt'
+
 import type { Request } from 'express'
-import { ConfigService } from '@nestjs/config'
 import { ApiException } from 'src/common/filters'
 import { ApiErrorCode } from 'src/common/enum'
 import { Reflector } from '@nestjs/core'
+import { AuthService } from './auth.service'
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
   constructor(
-    private jwtService: JwtService,
-    private configService: ConfigService,
     private reflector: Reflector,
+    private authService: AuthService,
   ) {}
 
-  async canActivate(context: ExecutionContext): Promise<boolean> {
+  canActivate(context: ExecutionContext): boolean {
     const isPublic = this.reflector.getAllAndOverride<boolean>('isPublic', [
       context.getHandler(),
       context.getClass(),
@@ -34,9 +33,7 @@ export class JwtAuthGuard implements CanActivate {
     if (!token) throw new ApiException('未登录', ApiErrorCode.TOKEN_MISS)
 
     try {
-      await this.jwtService.verifyAsync(token, {
-        secret: this.configService.get('JWT_SECRET'),
-      })
+      this.authService.verifyToken(token)
     }
     catch {
       throw new ApiException('token验证失败', ApiErrorCode.TOKEN_INVALID)

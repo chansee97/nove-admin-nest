@@ -6,12 +6,14 @@ import { UserService } from 'src/modules/user/user.service'
 import { ApiException } from 'src/common/filters'
 import { ApiErrorCode } from 'src/common/enum'
 import type { Request } from 'express'
+import { AuthService } from 'src/modules/auth/auth.service'
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
     private userServicese: UserService,
+    private authService: AuthService,
   ) { }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -30,9 +32,10 @@ export class PermissionGuard implements CanActivate {
     if (requiredPermissions.length === 0) return true
     const [, token] = request.headers.authorization?.split(' ') ?? []
 
+    const info = this.authService.verifyToken(token)
+
     const permissionNames = await this.userServicese.findPermissionNames(
-      token,
-      request.user,
+      info.username,
     )
 
     const isContainedPermission = requiredPermissions.every(item =>

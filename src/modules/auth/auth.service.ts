@@ -4,6 +4,7 @@ import { UserService } from 'src/modules/user/user.service'
 import { encryptData } from 'src/utils/crypto'
 import { ApiException } from 'src/common/filters'
 import { ApiErrorCode } from 'src/common/enum'
+import { ConfigService } from '@nestjs/config'
 import type { LoginAuthDto } from './dto/login-auth.dto'
 
 @Injectable()
@@ -11,6 +12,7 @@ export class AuthService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
+    private configService: ConfigService,
   ) {}
 
   async login(loginAuthDto: LoginAuthDto) {
@@ -33,6 +35,13 @@ export class AuthService {
       return user
     }
     return null
+  }
+
+  verifyToken(token: string) {
+    const info = this.jwtService.verify(token, {
+      secret: this.configService.get('JWT_SECRET'),
+    })
+    return info
   }
 
   async refreshToken(refreshToken: string) {
