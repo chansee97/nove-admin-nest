@@ -28,20 +28,26 @@ export class User {
   @Column({ nullable: true })
   email: string // 邮箱
 
+  @Column({ nullable: true })
+  tel: string // 手机号码
+
+  @Column({ nullable: true })
+  notes: string // 备注
+
   @ManyToMany(() => Role)
   @JoinTable({
     name: 'user_role_relation',
   })
   roles: Role[] // 角色
 
+  @DeleteDateColumn({ nullable: true })
+  deletedAt: Date
+
   @CreateDateColumn()
-  createTime: Date
+    createTime: Date
 
   @UpdateDateColumn()
   updateTime: Date
-
-  @DeleteDateColumn({ nullable: true })
-  deletedAt: Date
 
   @BeforeInsert()
   beforeSave() {

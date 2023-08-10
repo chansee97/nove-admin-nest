@@ -5,6 +5,7 @@ import { SearchQuery } from 'src/common/dto'
 import { UserService } from './user.service'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
+import { SetRoleDto } from './dto/set-roles.dto'
 
 @Controller('user')
 export class UserController {
@@ -27,8 +28,13 @@ export class UserController {
   }
 
   @Patch('update')
-  update(@Body() updateUserDto: UpdateUserDto) {
+  update(@Body(ValidationPipe) updateUserDto: UpdateUserDto) {
     return this.userService.update(updateUserDto)
+  }
+
+  @Post('setRole')
+  setRole(@Body(ValidationPipe) setRoleDto: SetRoleDto) {
+    return this.userService.setRole(setRoleDto)
   }
 
   @Delete(':id')

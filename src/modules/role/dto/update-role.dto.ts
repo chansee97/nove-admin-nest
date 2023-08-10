@@ -4,5 +4,5 @@ import { CreateRoleDto } from './create-role.dto'
 
 export class UpdateRoleDto extends PartialType(CreateRoleDto) {
   @IsNotEmpty()
-  id: string
+  id: number
 }

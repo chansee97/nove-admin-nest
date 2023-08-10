@@ -8,6 +8,7 @@ import type { SearchQuery } from 'src/common/dto/page.dto'
 import { Role } from '../role/entities/role.entity'
 import type { CreateUserDto } from './dto/create-user.dto'
 import type { UpdateUserDto } from './dto/update-user.dto'
+import type { SetRoleDto } from './dto/set-roles.dto'
 import { User } from './entities/user.entity'
 
 @Injectable()
@@ -21,7 +22,7 @@ export class UserService {
   }
 
   async create(createUserDto: CreateUserDto) {
-    const { username, roleIds } = createUserDto
+    const { username } = createUserDto
     const existUser = await this.userRepository.findOne({
       where: { username },
     })
@@ -30,14 +31,7 @@ export class UserService {
       throw new ApiException('用户已存在', ApiErrorCode.USER_EXIST)
 
     try {
-      // 查询数组roleIds对应所有role的实例
-      const roles = await this.roleRepository.find({
-        where: {
-          id: In(roleIds),
-        },
-      })
-
-      const newUser = this.userRepository.create({ ...createUserDto, roles })
+      const newUser = this.userRepository.create(createUserDto)
       await this.userRepository.save(newUser)
       return '注册成功'
     }
@@ -71,19 +65,26 @@ export class UserService {
 
   async findOne(id: number) {
     const user = await this.userRepository.findOne({
-      where: { id },
+      where: {
+        id,
+        deletedAt: null,
+      },
       relations: ['roles'],
     })
 
     if (!user)
       throw new ApiException('未找到该用户信息', ApiErrorCode.USER_NOTEXIST)
 
+    delete user.password
     return user
   }
 
   async findOneByUserName(username: string) {
     const user = await this.userRepository.findOne({
-      where: { username },
+      where: {
+        username,
+        deletedAt: null,
+      },
     })
     if (!user)
       throw new ApiException('未找到该用户信息', ApiErrorCode.USER_NOTEXIST)
@@ -92,8 +93,19 @@ export class UserService {
   }
 
   async update(updateUserDto: UpdateUserDto) {
-    const { id, roleIds } = updateUserDto
-    const user = await this.findOne(id)
+    const { id } = updateUserDto
+
+    if (updateUserDto.password)
+      updateUserDto.password = encryptData(updateUserDto.password)
+
+    await this.userRepository.update(id, updateUserDto)
+    return '更新成功'
+  }
+
+  async setRole(setRoleDto: SetRoleDto) {
+    const { userId, roleIds } = setRoleDto
+
+    const user = await this.findOne(userId)
 
     const roles = await this.roleRepository.find({
       where: {
@@ -101,11 +113,11 @@ export class UserService {
       },
     })
 
-    if (updateUserDto.password)
-      updateUserDto.password = encryptData(updateUserDto.password)
+    user.roles = roles
 
-    await this.userRepository.save({ ...user, ...updateUserDto, roles })
-    return '更新成功'
+    await this.userRepository.save(user)
+
+    return '设置成功'
   }
 
   async remove(id: number) {

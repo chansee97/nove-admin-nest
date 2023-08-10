@@ -13,12 +13,15 @@ import { Menu } from 'src/modules/menu/entities/menu.entity'
 @Entity()
 export class Role {
   @PrimaryGeneratedColumn()
-  id: string
+  id: number
 
   @Column({
     length: 20,
   })
   name: string
+
+  @Column({ nullable: true })
+  notes: string // 备注
 
   @CreateDateColumn()
   createTime: Date

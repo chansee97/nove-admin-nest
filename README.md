@@ -14,6 +14,15 @@ nova-admin Nestjs后端
 
 - jwt authentication
 - RBAC Authority Control (user -> role -> premissions)
+- Menu Management (role -> menus)
+
+## Nova front end
+
+[Nova Admin](https://github.com/chansee97/nova-admin)
+
+## API docs
+
+[ApiFox](https://nova-admin-nest.apifox.cn/)
 
 ## Usage
 

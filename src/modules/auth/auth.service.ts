@@ -23,14 +23,14 @@ export class AuthService {
     const payload = { username: user.username, sub: user.id }
     const accessToken = this.jwtService.sign(payload)
     const refreshToken = this.jwtService.sign(payload, { expiresIn: '8d' })
-    return { accessToken, refreshToken }
+    return { ...user, accessToken, refreshToken }
   }
 
   async validateUser(username: string, password: string): Promise<any> {
     const user = await this.userService.findOneByUserName(username)
-    if (user && user.password === encryptData(password)) {
-      const { password, ...result } = user
-      return result
+    if (user.password === encryptData(password)) {
+      delete user.password
+      return user
     }
     return null
   }

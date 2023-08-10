@@ -8,6 +8,8 @@ import { Menu } from '../menu/entities/menu.entity'
 import { Permission } from '../permission/entities/permission.entity'
 import type { CreateRoleDto } from './dto/create-role.dto'
 import type { UpdateRoleDto } from './dto/update-role.dto'
+import type { SetMenusDto } from './dto/set-menus.dto'
+import type { SetPermissionsDto } from './dto/set-permisssions.dto'
 import { Role } from './entities/role.entity'
 
 @Injectable()
@@ -29,21 +31,7 @@ export class RoleService {
     if (existRole)
       throw new ApiException('角色已存在', ApiErrorCode.SERVER_ERROR)
 
-    // 查询传入数组permissionIds的全部permission实体
-    const permissions = await this.permissionRepository.find({
-      where: {
-        id: In(createRoleDto.permissionIds),
-      },
-    })
-
-    // 查询传入数组menuIds的全部menu实体
-    const menus = await this.menuRepository.find({
-      where: {
-        id: In(createRoleDto.menuIds),
-      },
-    })
-
-    this.roleRepository.save({ ...createRoleDto, permissions, menus })
+    this.roleRepository.save(createRoleDto)
 
     return '角色新增成功'
   }
@@ -67,7 +55,7 @@ export class RoleService {
     }
   }
 
-  async findOne(id: string) {
+  async findOne(id: number) {
     const existData = await this.roleRepository.findOne({
       where: { id },
       relations: ['permissions', 'menus'],
@@ -82,30 +70,50 @@ export class RoleService {
   async update(updateRoleDto: UpdateRoleDto) {
     const { id } = updateRoleDto
 
-    const role = await this.findOne(id)
+    // 检查是否存在
+    await this.findOne(id)
 
-    const permissions = await this.permissionRepository.find({
-      where: {
-        id: In(updateRoleDto.permissionIds),
-      },
-    })
-
-    const menus = await this.menuRepository.find({
-      where: {
-        id: In(updateRoleDto.menuIds),
-      },
-    })
-
-    // 更新角色的字段
-    role.permissions = permissions
-    role.menus = menus
-    role.name = updateRoleDto.name // 根据实际字段进行赋值
-
-    this.roleRepository.save(role)
+    this.roleRepository.update(id, updateRoleDto)
     return '角色修改成功'
   }
 
-  async remove(id: string) {
+  async setPermissions(setPermissionsDto: SetPermissionsDto) {
+    const { roleId, permissionIds } = setPermissionsDto
+
+    const role = await this.findOne(roleId)
+
+    const permissions = await this.permissionRepository.find({
+      where: {
+        id: In(permissionIds),
+      },
+    })
+
+    role.permissions = permissions
+
+    await this.roleRepository.save(role)
+
+    return '设置成功'
+  }
+
+  async setMenus(setMenusDto: SetMenusDto) {
+    const { roleId, menuIds } = setMenusDto
+
+    const role = await this.findOne(roleId)
+
+    const menus = await this.menuRepository.find({
+      where: {
+        id: In(menuIds),
+      },
+    })
+
+    role.menus = menus
+
+    await this.roleRepository.save(role)
+
+    return '设置成功'
+  }
+
+  async remove(id: number) {
     const role = await this.findOne(id)
 
     // 删除关联的权限
