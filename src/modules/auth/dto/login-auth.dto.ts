@@ -6,6 +6,8 @@ export class LoginAuthDto {
   })
   username: string
 
-  @IsNotEmpty()
+  @IsNotEmpty({
+    message: '密码不能为空',
+  })
   password: string
 }

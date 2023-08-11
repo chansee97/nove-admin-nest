@@ -6,6 +6,7 @@ import {
   Catch,
   HttpException,
 } from '@nestjs/common'
+import { isArray } from 'class-validator'
 import type { Request, Response } from 'express'
 import { logger } from 'src/utils/logger'
 
@@ -20,7 +21,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
     // 输出日志
     logger('HTTP').error(`[${request.method}]`, `[${request.url}]`, exception.message)
 
-    const message = (exception.getResponse() as any).message || exception.message
+    let message = (exception.getResponse() as any).message || exception.message
+
+    if (isArray(message))
+      message = message[0]
 
     response.status(status).json({
       code: status,

@@ -1,5 +1,4 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common'
-import { ValidationPipe } from '@nestjs/common/pipes'
 import { Permissions, Public } from 'src/common/decorators'
 import { SearchQuery } from 'src/common/dto'
 import { UserService } from './user.service'
@@ -13,7 +12,7 @@ export class UserController {
 
   @Public()
   @Post('register')
-  create(@Body(ValidationPipe) createUserDto: CreateUserDto) {
+  create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto)
   }
 
@@ -28,12 +27,12 @@ export class UserController {
   }
 
   @Patch('update')
-  update(@Body(ValidationPipe) updateUserDto: UpdateUserDto) {
+  update(@Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(updateUserDto)
   }
 
   @Post('setRole')
-  setRole(@Body(ValidationPipe) setRoleDto: SetRoleDto) {
+  setRole(@Body() setRoleDto: SetRoleDto) {
     return this.userService.setRole(setRoleDto)
   }
 

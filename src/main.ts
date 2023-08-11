@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core'
 import { ConfigService } from '@nestjs/config'
-
+import { ValidationPipe } from '@nestjs/common/pipes'
 import { ApiExceptionsFilter, HttpExceptionFilter } from 'src/common/filters'
 import { TransformInterceptor } from 'src/common/interceptor'
 
@@ -10,12 +10,14 @@ async function bootstrap() {
   // 创建服务实例
   const app = await NestFactory.create(AppModule, {})
 
+  app.useGlobalPipes(new ValidationPipe())
+
   // 全局拦截器
   app.useGlobalInterceptors(new TransformInterceptor())
 
   // 错误过滤器
-  app.useGlobalFilters(new HttpExceptionFilter())
   app.useGlobalFilters(new ApiExceptionsFilter())
+  app.useGlobalFilters(new HttpExceptionFilter())
 
   // 跨域
   app.enableCors()

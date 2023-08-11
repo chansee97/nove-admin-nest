@@ -1,6 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common'
 import { SearchQuery } from 'src/common/dto'
-import { ValidationPipe } from '@nestjs/common/pipes'
 import { RoleService } from './role.service'
 import { CreateRoleDto } from './dto/create-role.dto'
 import { UpdateRoleDto } from './dto/update-role.dto'
@@ -12,7 +11,7 @@ export class RoleController {
   constructor(private readonly roleService: RoleService) {}
 
   @Post('create')
-  create(@Body(ValidationPipe) createRoleDto: CreateRoleDto) {
+  create(@Body() createRoleDto: CreateRoleDto) {
     return this.roleService.create(createRoleDto)
   }
 
@@ -27,17 +26,17 @@ export class RoleController {
   }
 
   @Patch('update')
-  update(@Body(ValidationPipe) updateRoleDto: UpdateRoleDto) {
+  update(@Body() updateRoleDto: UpdateRoleDto) {
     return this.roleService.update(updateRoleDto)
   }
 
   @Post('setPremissions')
-  setPremissions(@Body(ValidationPipe) setPermissionsDto: SetPermissionsDto) {
+  setPremissions(@Body() setPermissionsDto: SetPermissionsDto) {
     return this.roleService.setPermissions(setPermissionsDto)
   }
 
   @Post('setMenus')
-  setMenus(@Body(ValidationPipe) setMenusDto: SetMenusDto) {
+  setMenus(@Body() setMenusDto: SetMenusDto) {
     return this.roleService.setMenus(setMenusDto)
   }
 
