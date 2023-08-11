@@ -7,6 +7,7 @@ import {
   HttpException,
 } from '@nestjs/common'
 import type { Request, Response } from 'express'
+import { logger } from 'src/utils/logger'
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -16,16 +17,15 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest<Request>()
     const status = exception.getStatus()
 
-    console.error(`
-    error==>${request.method}
-    path==>${request.url}
-    reason==>${exception.message}`,
-    )
+    // 输出日志
+    logger('HTTP').error(`[${request.method}]`, `[${request.url}]`, exception.message)
+
+    const message = (exception.getResponse() as any).message || exception.message
 
     response.status(status).json({
       code: status,
       data: null,
-      message: (exception.getResponse() as any).message || exception.message,
+      message,
     })
   }
 }

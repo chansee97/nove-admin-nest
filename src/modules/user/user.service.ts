@@ -50,6 +50,7 @@ export class UserService {
     }
 
     const [list, total] = await this.userRepository.findAndCount({
+      select: ['id', 'username', 'nickname', 'avatar', 'email', 'tel', 'notes'],
       skip,
       take,
       where: {
@@ -65,6 +66,7 @@ export class UserService {
 
   async findOne(id: number) {
     const user = await this.userRepository.findOne({
+      select: ['id', 'username', 'nickname', 'avatar', 'email', 'tel', 'notes'],
       where: {
         id,
         deletedAt: null,
@@ -75,7 +77,6 @@ export class UserService {
     if (!user)
       throw new ApiException('未找到该用户信息', ApiErrorCode.USER_NOTEXIST)
 
-    delete user.password
     return user
   }
 

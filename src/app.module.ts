@@ -11,7 +11,7 @@ import { getEnvFilePath } from './utils/env'
 import { AuthModule } from './modules/auth/auth.module'
 import { RoleModule } from './modules/role/role.module'
 import { PermissionModule } from './modules/permission/permission.module'
-import { MenuModule } from './modules/menu/menu.module';
+import { MenuModule } from './modules/menu/menu.module'
 import configuration from './config/configuration'
 
 @Module({
