@@ -16,8 +16,8 @@ async function bootstrap() {
   app.useGlobalInterceptors(new TransformInterceptor())
 
   // 错误过滤器
-  app.useGlobalFilters(new ApiExceptionsFilter())
   app.useGlobalFilters(new HttpExceptionFilter())
+  app.useGlobalFilters(new ApiExceptionsFilter())
 
   // 跨域
   app.enableCors()
