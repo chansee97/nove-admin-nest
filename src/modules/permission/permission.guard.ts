@@ -14,7 +14,7 @@ export class PermissionGuard implements CanActivate {
     private reflector: Reflector,
     private userServicese: UserService,
     private authService: AuthService,
-  ) { }
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     interface CusRequest extends Request {
@@ -22,12 +22,11 @@ export class PermissionGuard implements CanActivate {
     }
     const request: CusRequest = context.switchToHttp().getRequest()
 
-    const requiredPermissions = this.reflector.getAllAndOverride<string[]>(
-      'permissions',
-      [
+    const requiredPermissions
+      = this.reflector.getAllAndOverride<string[]>('permissions', [
         context.getClass(),
-        context.getHandler()],
-    ) || []
+        context.getHandler(),
+      ]) || []
 
     if (requiredPermissions.length === 0) return true
     const [, token] = request.headers.authorization?.split(' ') ?? []

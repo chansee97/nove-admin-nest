@@ -18,8 +18,7 @@ export class UserService {
     private userRepository: Repository<User>,
     @InjectRepository(Role)
     private roleRepository: Repository<Role>,
-  ) {
-  }
+  ) {}
 
   async create(createUserDto: CreateUserDto) {
     const { username } = createUserDto
@@ -27,8 +26,7 @@ export class UserService {
       where: { username },
     })
 
-    if (existUser)
-      throw new ApiException('用户已存在', ApiErrorCode.USER_EXIST)
+    if (existUser) throw new ApiException('用户已存在', ApiErrorCode.USER_EXIST)
 
     try {
       const newUser = this.userRepository.create(createUserDto)
@@ -90,6 +88,7 @@ export class UserService {
     if (!user)
       throw new ApiException('未找到该用户信息', ApiErrorCode.USER_NOTEXIST)
 
+    delete user.deletedAt
     return user
   }
 
@@ -133,7 +132,10 @@ export class UserService {
   }
 
   test(params) {
-    console.warn('🚀 ~ file: user.service.ts:109 ~ UserService ~ test ~ params:', params)
+    console.warn(
+      '🚀 ~ file: user.service.ts:109 ~ UserService ~ test ~ params:',
+      params,
+    )
   }
 
   async findPermissionNames(username) {

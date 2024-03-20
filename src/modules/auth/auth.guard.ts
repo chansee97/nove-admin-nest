@@ -1,10 +1,5 @@
-import type {
-  CanActivate,
-  ExecutionContext,
-} from '@nestjs/common'
-import {
-  Injectable,
-} from '@nestjs/common'
+import type { CanActivate, ExecutionContext } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 
 import type { Request } from 'express'
 import { ApiException } from 'src/common/filters'
@@ -24,8 +19,7 @@ export class JwtAuthGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ])
-    if (isPublic)
-      return true
+    if (isPublic) return true
 
     const request: Request = context.switchToHttp().getRequest()
     const token = this.extractTokenFromHeader(request)

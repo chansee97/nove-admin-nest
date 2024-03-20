@@ -1,5 +1,12 @@
 import {
-  BeforeInsert, Column, CreateDateColumn, DeleteDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn,
+  BeforeInsert,
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
 import { encryptData } from 'src/utils/crypto'
@@ -10,41 +17,49 @@ export class User {
   /*
   @PrimaryGeneratedColumn('uuid')可配置为UUID为主键
    */
-  @PrimaryGeneratedColumn()
-  id: number // 标记为主键，值自动生成
+  @PrimaryGeneratedColumn() // 标记为主键，值自动生成
+  id: number
 
+  // 用户名
   @Column({ length: 30 })
-  username: string // 用户名
+  username: string
 
+  // 密码
   @Column()
-  password: string // 密码
+  password: string
 
+  // 昵称
   @Column({ nullable: true })
-  nickname: string // 昵称
+  nickname: string
 
+  // 头像
   @Column({ nullable: true })
-  avatar: string // 头像
+  avatar: string
 
+  // 邮箱
   @Column({ nullable: true })
-  email: string // 邮箱
+  email: string
 
+  // 手机号码
   @Column({ nullable: true })
-  tel: string // 手机号码
+  tel: string
 
+  // 备注
   @Column({ nullable: true })
-  notes: string // 备注
+  notes: string
 
+  // 角色
   @ManyToMany(() => Role)
   @JoinTable({
     name: 'user_role_relation',
   })
-  roles: Role[] // 角色
+  roles: Role[]
 
   @DeleteDateColumn({ nullable: true })
   deletedAt: Date
 
   @CreateDateColumn()
-    createTime: Date
+  createTime: Date
 
   @UpdateDateColumn()
   updateTime: Date

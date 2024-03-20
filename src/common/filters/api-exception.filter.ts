@@ -1,12 +1,5 @@
-import type {
-  ArgumentsHost,
-  ExceptionFilter,
-} from '@nestjs/common'
-import {
-  Catch,
-  HttpException,
-  HttpStatus,
-} from '@nestjs/common'
+import type { ArgumentsHost, ExceptionFilter } from '@nestjs/common'
+import { Catch, HttpException, HttpStatus } from '@nestjs/common'
 import type { Request, Response } from 'express'
 import { logger } from 'src/utils/logger'
 import { ApiException } from './api-exception'
@@ -23,13 +16,20 @@ export class ApiExceptionsFilter implements ExceptionFilter {
         : HttpStatus.INTERNAL_SERVER_ERROR
 
     // 输出日志
-    logger('API').error(`[${request.method}]`, `[${request.url}]`, exception.getErrorMessage())
+    logger('API').error(
+      `[${request.method}]`,
+      `[${request.url}]`,
+      exception.getErrorMessage(),
+    )
 
     response.status(status).json({
-      code: exception instanceof ApiException ? exception.getErrorCode() : status,
+      code:
+        exception instanceof ApiException ? exception.getErrorCode() : status,
       data: null,
       message:
-        exception instanceof ApiException ? exception.getErrorMessage() : exception,
+        exception instanceof ApiException
+          ? exception.getErrorMessage()
+          : exception,
     })
   }
 }

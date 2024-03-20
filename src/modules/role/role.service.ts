@@ -19,7 +19,7 @@ export class RoleService {
     private roleRepository: Repository<Role>,
     @InjectRepository(Permission)
     private permissionRepository: Repository<Permission>,
-     @InjectRepository(Menu)
+    @InjectRepository(Menu)
     private menuRepository: Repository<Menu>,
   ) {}
 

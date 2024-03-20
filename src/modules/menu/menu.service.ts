@@ -13,8 +13,7 @@ export class MenuService {
   constructor(
     @InjectRepository(Menu)
     private menuRepository: Repository<Menu>,
-
-  ) { }
+  ) {}
 
   async create(createMenuDto: CreateMenuDto) {
     const menuName = createMenuDto.menuName

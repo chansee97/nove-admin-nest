@@ -1,9 +1,9 @@
 {
   "editor.tabSize": 2,
-  "prettier.enable": false,
+  "prettier.enable": true,
   "eslint.format.enable": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+    "source.fixAll.eslint": "explicit"
   },
   "eslint.validate": [
     "javascript",

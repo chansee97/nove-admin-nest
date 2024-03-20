@@ -13,7 +13,7 @@ export class PermissionService {
   constructor(
     @InjectRepository(Permission)
     private permissionRepository: Repository<Permission>,
-  ) { }
+  ) {}
 
   async create(createPermissionDto: CreatePermissionDto) {
     const name = createPermissionDto.name
