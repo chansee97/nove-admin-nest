@@ -1,4 +1,4 @@
-import { getEnvVar } from 'src/utils/env'
+import { getEnvVar } from '@/utils/env'
 
 export default () => ({
   // 基础相关

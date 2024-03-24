@@ -2,10 +2,10 @@ import type { CanActivate, ExecutionContext } from '@nestjs/common'
 import { Injectable } from '@nestjs/common'
 
 import type { Request } from 'express'
-import { ApiException } from 'src/common/filters'
-import { ApiErrorCode } from 'src/common/enum'
 import { Reflector } from '@nestjs/core'
 import { AuthService } from './auth.service'
+import { ApiException } from '@/common/filters'
+import { ApiErrorCode } from '@/common/enum'
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {

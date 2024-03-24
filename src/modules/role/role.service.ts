@@ -1,9 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { In, Repository } from 'typeorm'
-import { ApiException } from 'src/common/filters'
-import { ApiErrorCode } from 'src/common/enum'
-import type { SearchQuery } from 'src/common/dto/page.dto'
 import { Menu } from '../menu/entities/menu.entity'
 import { Permission } from '../permission/entities/permission.entity'
 import type { CreateRoleDto } from './dto/create-role.dto'
@@ -11,6 +8,9 @@ import type { UpdateRoleDto } from './dto/update-role.dto'
 import type { SetMenusDto } from './dto/set-menus.dto'
 import type { SetPermissionsDto } from './dto/set-permisssions.dto'
 import { Role } from './entities/role.entity'
+import type { SearchQuery } from '@/common/dto/page.dto'
+import { ApiErrorCode } from '@/common/enum'
+import { ApiException } from '@/common/filters'
 
 @Injectable()
 export class RoleService {

@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
-import { UserService } from 'src/modules/user/user.service'
-import { encryptData } from 'src/utils/crypto'
-import { ApiException } from 'src/common/filters'
-import { ApiErrorCode } from 'src/common/enum'
 import { ConfigService } from '@nestjs/config'
 import type { LoginAuthDto } from './dto/login-auth.dto'
+import { UserService } from '@/modules/user/user.service'
+import { encryptData } from '@/utils/crypto'
+import { ApiException } from '@/common/filters'
+import { ApiErrorCode } from '@/common/enum'
 
 @Injectable()
 export class AuthService {

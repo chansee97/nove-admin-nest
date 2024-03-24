@@ -1,15 +1,15 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { In, Repository } from 'typeorm'
-import { ApiException } from 'src/common/filters'
-import { ApiErrorCode } from 'src/common/enum'
-import { encryptData } from 'src/utils/crypto'
-import type { SearchQuery } from 'src/common/dto/page.dto'
 import { Role } from '../role/entities/role.entity'
 import type { CreateUserDto } from './dto/create-user.dto'
 import type { UpdateUserDto } from './dto/update-user.dto'
 import type { SetRoleDto } from './dto/set-roles.dto'
 import { User } from './entities/user.entity'
+import type { SearchQuery } from '@/common/dto/page.dto'
+import { encryptData } from '@/utils/crypto'
+import { ApiErrorCode } from '@/common/enum'
+import { ApiException } from '@/common/filters'
 
 @Injectable()
 export class UserService {

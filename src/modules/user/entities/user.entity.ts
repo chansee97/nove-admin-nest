@@ -9,8 +9,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
-import { encryptData } from 'src/utils/crypto'
-import { Role } from '../../role/entities/role.entity'
+import { Role } from '@/modules/role/entities/role.entity'
+import { encryptData } from '@/utils/crypto'
 
 @Entity('user')
 export class User {

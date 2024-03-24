@@ -8,12 +8,12 @@ import {
   Post,
   Query,
 } from '@nestjs/common'
-import { Permissions, Public } from 'src/common/decorators'
-import { SearchQuery } from 'src/common/dto'
 import { UserService } from './user.service'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { SetRoleDto } from './dto/set-roles.dto'
+import { SearchQuery } from '@/common/dto'
+import { Permissions, Public } from '@/common/decorators'
 
 @Controller('user')
 export class UserController {

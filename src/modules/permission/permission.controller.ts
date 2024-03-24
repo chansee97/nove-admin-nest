@@ -8,10 +8,10 @@ import {
   Post,
   Query,
 } from '@nestjs/common'
-import { SearchQuery } from 'src/common/dto'
 import { PermissionService } from './permission.service'
 import { CreatePermissionDto } from './dto/create-permission.dto'
 import { UpdatePermissionDto } from './dto/update-permission.dto'
+import { SearchQuery } from '@/common/dto'
 
 @Controller('permission')
 export class PermissionController {

@@ -1,10 +1,9 @@
 import { NestFactory } from '@nestjs/core'
 import { ConfigService } from '@nestjs/config'
 import { ValidationPipe } from '@nestjs/common/pipes'
-import { ApiExceptionsFilter, HttpExceptionFilter } from 'src/common/filters'
-import { TransformInterceptor } from 'src/common/interceptor'
-
 import { AppModule } from './app.module'
+import { ApiExceptionsFilter, HttpExceptionFilter } from '@/common/filters'
+import { TransformInterceptor } from '@/common/interceptor'
 
 async function bootstrap() {
   // 创建服务实例

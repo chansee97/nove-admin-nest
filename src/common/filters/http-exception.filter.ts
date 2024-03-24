@@ -2,7 +2,7 @@ import type { ArgumentsHost, ExceptionFilter } from '@nestjs/common'
 import { Catch, HttpException } from '@nestjs/common'
 import { isArray } from 'class-validator'
 import type { Request, Response } from 'express'
-import { logger } from 'src/utils/logger'
+import { logger } from '@/utils/logger'
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {

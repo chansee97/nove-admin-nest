@@ -6,7 +6,7 @@ import type {
 import { Injectable } from '@nestjs/common'
 import type { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
-import { logger } from 'src/utils/logger'
+import { logger } from '@/utils/logger'
 
 export interface Response<T> {
   data: T
