@@ -22,10 +22,16 @@ export class AuthService {
     if (!user)
       throw new ApiException('密码错误', ApiErrorCode.USER_PASSWORD_INVALID)
 
-    const payload = { username: user.username, sub: user.id }
-    const accessToken = this.jwtService.sign(payload)
-    const refreshToken = this.jwtService.sign(payload, { expiresIn: '8d' })
-    return { ...user, accessToken, refreshToken }
+    const token = this.generateToken(user)
+    return { ...user, ...token }
+  }
+
+  generateToken(user: any) {
+    const payload = { username: user.username, userId: user.id }
+    return {
+      accessToken: this.jwtService.sign(payload),
+      refreshToken: this.jwtService.sign(payload, { expiresIn: '8d' }),
+    }
   }
 
   async validateUser(username: string, password: string): Promise<any> {
@@ -49,7 +55,7 @@ export class AuthService {
 
     if (res) {
       const user = await this.userService.findOneByUserName(res.username)
-      return this.login(user)
+      return this.generateToken(user)
     }
     return null
   }

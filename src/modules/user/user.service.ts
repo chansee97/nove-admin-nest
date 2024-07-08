@@ -123,9 +123,6 @@ export class UserService {
   async remove(id: number) {
     const user = await this.findOne(id)
 
-    // 删除关联的角色
-    await this.roleRepository.remove(user.roles)
-
     await this.userRepository.remove(user)
 
     return '删除成功'
