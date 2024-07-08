@@ -22,8 +22,8 @@ export class PermissionGuard implements CanActivate {
     }
     const request: CusRequest = context.switchToHttp().getRequest()
 
-    const requiredPermissions
-      = this.reflector.getAllAndOverride<string[]>('permissions', [
+    const requiredPermissions =
+      this.reflector.getAllAndOverride<string[]>('permissions', [
         context.getClass(),
         context.getHandler(),
       ]) || []
@@ -37,7 +37,7 @@ export class PermissionGuard implements CanActivate {
       info.username,
     )
 
-    const isContainedPermission = requiredPermissions.every(item =>
+    const isContainedPermission = requiredPermissions.every((item) =>
       permissionNames.includes(item),
     )
     if (!isContainedPermission)

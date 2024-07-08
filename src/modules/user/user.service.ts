@@ -32,8 +32,7 @@ export class UserService {
       const newUser = this.userRepository.create(createUserDto)
       await this.userRepository.save(newUser)
       return '注册成功'
-    }
-    catch (error: unknown) {
+    } catch (error: unknown) {
       throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR)
     }
   }
@@ -141,12 +140,11 @@ export class UserService {
       relations: ['roles', 'roles.permissions'],
     })
     if (user) {
-      const permissions = user.roles.flatMap(role => role.permissions)
-      const permissionNames = permissions.map(item => item.name)
+      const permissions = user.roles.flatMap((role) => role.permissions)
+      const permissionNames = permissions.map((item) => item.name)
 
       return [...new Set(permissionNames)]
-    }
-    else {
+    } else {
       return []
     }
   }

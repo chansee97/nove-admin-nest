@@ -1,14 +1,9 @@
 <div align="center">
-<img src="./nova.icon.svg" width="160"/>
-
-## Nova-admin-nestjs
+  <img src="./nova.icon.svg" width="160"/>
+  <h2>Nova-admin-nestjs</h2>
 </div>
 
-<div align="center">
-
-nova-admin Nestjs后端
-</div>
-
+<div align="center">nova-admin service</div>
 
 ## Feature
 
@@ -27,11 +22,14 @@ nova-admin Nestjs后端
 ## Usage
 
 ### Installation
-```
+
+```sh
 pnpm i
 ```
+
 ### Running
-```
+
+```sh
 # development
 npm run start
 

@@ -28,8 +28,7 @@ export class JwtAuthGuard implements CanActivate {
 
     try {
       this.authService.verifyToken(token)
-    }
-    catch {
+    } catch {
       throw new ApiException('token验证失败', ApiErrorCode.TOKEN_INVALID)
     }
 

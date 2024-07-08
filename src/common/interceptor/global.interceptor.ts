@@ -14,7 +14,8 @@ export interface Response<T> {
 
 @Injectable()
 export class TransformInterceptor<T>
-implements NestInterceptor<T, Response<T>> {
+  implements NestInterceptor<T, Response<T>>
+{
   intercept(
     context: ExecutionContext,
     next: CallHandler,
@@ -25,7 +26,7 @@ implements NestInterceptor<T, Response<T>> {
     return next
       .handle()
       .pipe(
-        map(data => ({ code: 200, data: data || true, message: '操作成功' })),
+        map((data) => ({ code: 200, data: data || true, message: '操作成功' })),
       )
   }
 }
